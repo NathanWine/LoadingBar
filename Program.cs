@@ -9,6 +9,7 @@ namespace LoadingBar
         {
             Task<bool> loading = AsyncTest.LoadAsync();
             loading.Wait();
+            Console.WriteLine();
         }
     }
     class AsyncTest
