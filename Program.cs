@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace LoadingBar
@@ -22,8 +20,8 @@ namespace LoadingBar
             {
                 while (bar.Progress < 1.0)
                 {
-                    await Task.Delay(rng.Next(10, 25));     // Simulate work being done
-                    bar.Progress += 0.001;                  // Simulate progress being made towards final goal
+                    await Task.Delay(rng.Next(10, 25));         // Simulate work being done
+                    bar.Progress += 0.002545;                   // Simulate progress being made towards final goal
                 }
             }
             return true;

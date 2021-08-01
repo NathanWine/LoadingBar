@@ -28,6 +28,12 @@ namespace LoadingBar
             }
         }
 
+        /// <summary>
+        /// Class to display progress while performing some task. Intended to be used in a "using" block.
+        /// </summary>
+        /// <param name="text">Label text to display while loading. ": " is added automatically.</param>
+        /// <param name="blocks">Number of blocks that the loading bar is made up of.</param>
+        /// <param name="refreshRate">How often the loading bar display updates in milliseconds.</param>
         public LoadingBar(string text="Loading", int blocks=15, int refreshRate=100)
         {
             label = text + ": ";
@@ -64,7 +70,7 @@ namespace LoadingBar
                     int currentNumBlocks = (int)Math.Floor(currentProgress * BLOCKS);
                     if (prevBlocks != currentNumBlocks)
                     {
-                        Console.SetCursorPosition(STARTING_POINT + prevBlocks + 1, Console.CursorTop);
+                        Console.SetCursorPosition(STARTING_POINT + prevBlocks + 1, Console.CursorTop);  // +1 for '['
                         while (prevBlocks < currentNumBlocks)
                         {
                             prevBlocks++;
@@ -79,13 +85,13 @@ namespace LoadingBar
                     else
                     {
                         prevProgress = progressSnapshot;
-                        Console.SetCursorPosition(STARTING_POINT + BLOCKS + 2, Console.CursorTop);
+                        Console.SetCursorPosition(STARTING_POINT + BLOCKS + 2, Console.CursorTop);      // + 2 for "[]"
                     }
-                    sb.Append(" " + (progressSnapshot * 100).ToString("00.0#") + "%");
+                    sb.Append(" " + (progressSnapshot * 100).ToString("00.0") + "%");
                 }
                 else
                 {
-                    Console.SetCursorPosition(STARTING_POINT + BLOCKS + 8, Console.CursorTop);
+                    Console.SetCursorPosition(STARTING_POINT + BLOCKS + 8, Console.CursorTop);          // + 8 for "] xx.xx%"
                 }
                 sb.Append(" " + animation[animState]);
                 animState++;
