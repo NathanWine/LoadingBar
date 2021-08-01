@@ -9,38 +9,24 @@ namespace LoadingBar
     {
         static void Main(string[] args)
         {
-            const string loadingMsg = "Now loading: ";
-            Random rng = new Random();
-            Console.Write(loadingMsg);
-
-            using (LoadingBar bar = new LoadingBar(loadingMsg.Length))
-            {
-                while (bar.Progress < 1.0)
-                {
-                    Thread.Sleep(rng.Next(10, 25));                 // Simulate work being done
-                    bar.Progress += 0.001;                          // Simulate progress being made towards final goal
-                }
-            }
-
-            Thread t = new Thread(AsyncTest.DoWork);
-            t.Start();
+            Task<bool> loading = AsyncTest.LoadAsync();
+            loading.Wait();
         }
     }
     class AsyncTest
     {
-        public static void DoWork()
+        public async static Task<bool> LoadAsync()
         {
-            const string loadingMsg = "Now loading: ";
             Random rng = new Random();
-            Console.Write(loadingMsg);
-            using (LoadingBar bar = new LoadingBar(loadingMsg.Length))
+            using (LoadingBar bar = new LoadingBar())
             {
                 while (bar.Progress < 1.0)
                 {
-                    Thread.Sleep(rng.Next(10, 25));                 // Simulate work being done
-                    bar.Progress += 0.001;                          // Simulate progress being made towards final goal
+                    await Task.Delay(rng.Next(10, 25));     // Simulate work being done
+                    bar.Progress += 0.001;                  // Simulate progress being made towards final goal
                 }
             }
+            return true;
         }
     }
 }

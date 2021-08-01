@@ -4,95 +4,94 @@ using System.Threading;
 
 namespace LoadingBar
 {
-    class LoadingBar : IDisposable, IProgress<double>
+    class LoadingBar : IDisposable
     {
-        private double _progress;
-        private double prevProgress;
         private readonly int BLOCKS;
-        private int prevBlocks;
         private readonly int STARTING_POINT;
-        private readonly Timer timer;
-        private StringBuilder sb;
-        private const string animation = @"-\|/";
+        private int prevBlocks;
         private int animState;
+        private double currentProgress;
+        private double prevProgress;
+        private readonly string label;
+        private const string animation = @"-\|/";
+        private Timer timer;
+        private readonly StringBuilder sb;
+
         public double Progress { 
             get
             {
-                return _progress;
+                return currentProgress;
             }
             set
             {
-                _progress = Math.Clamp(value, 0.0, 1.0);
+                currentProgress = Math.Clamp(value, 0.0, 1.0);
             }
         }
 
-        public LoadingBar(int startingPoint=0, int blocks=15, int refreshRate=200)
+        public LoadingBar(string text="Loading", int blocks=15, int refreshRate=100)
         {
-            _progress = 0.0;
+            label = text + ": ";
+            prevBlocks = 0;
+            animState = 0;
+            currentProgress = 0.0;
             prevProgress = 0.0;
             BLOCKS = blocks;
-            STARTING_POINT = startingPoint;
-            prevBlocks = 0;
+            STARTING_POINT = label.Length;
             sb = new StringBuilder();
-            timer = new Timer(UpdateDisplay, null, 0, refreshRate);
-            animState = 0;
-            InitDisplay();
+            InitDisplay(refreshRate);
         }
 
-        private void InitDisplay()
+        private void InitDisplay(int refreshRate)
         {
-            sb.Append('[');
+            sb.Append(label + '[');
             for (int i = 0; i < BLOCKS; i++)
             {
                 sb.Append('-');
             }
             sb.Append("] 00.0%");
             Console.Write(sb);
+            timer = new Timer(UpdateDisplay, null, 0, refreshRate);
         }
 
         private void UpdateDisplay(object state)
         {
             lock (timer)
             {
-                int currentNumBlocks = (int) Math.Floor(_progress * BLOCKS);
-
-                if (prevBlocks != currentNumBlocks)
+                sb.Clear();
+                double progressSnapshot = currentProgress;
+                if (progressSnapshot != prevProgress)
                 {
-                    sb.Clear();
-                    Console.SetCursorPosition(STARTING_POINT + prevBlocks + 1, Console.CursorTop);
-                    while (prevBlocks < currentNumBlocks)
+                    int currentNumBlocks = (int)Math.Floor(currentProgress * BLOCKS);
+                    if (prevBlocks != currentNumBlocks)
                     {
-                        prevBlocks++;
-                        sb.Append('#');
+                        Console.SetCursorPosition(STARTING_POINT + prevBlocks + 1, Console.CursorTop);
+                        while (prevBlocks < currentNumBlocks)
+                        {
+                            prevBlocks++;
+                            sb.Append('#');
+                        }
+                        for (int i = 0; i < (BLOCKS - currentNumBlocks); i++)
+                        {
+                            sb.Append('-');
+                        }
+                        sb.Append(']');
                     }
-                    for (int i = 0; i < (BLOCKS - currentNumBlocks); i++)
+                    else
                     {
-                        sb.Append('-');
+                        prevProgress = progressSnapshot;
+                        Console.SetCursorPosition(STARTING_POINT + BLOCKS + 2, Console.CursorTop);
                     }
-                    sb.Append("] " + (_progress * 100).ToString("00.0#") + "%");
-                    Console.Write(sb);
+                    sb.Append(" " + (progressSnapshot * 100).ToString("00.0#") + "%");
                 }
-                else if (_progress != prevProgress)
+                else
                 {
-                    sb.Clear();
-                    prevProgress = _progress;
-                    Console.SetCursorPosition(STARTING_POINT + BLOCKS + 2, Console.CursorTop);
-                    sb.Append(" " + (_progress * 100).ToString("00.0#") + "%");
-                    Console.Write(sb);
+                    Console.SetCursorPosition(STARTING_POINT + BLOCKS + 8, Console.CursorTop);
                 }
-                //else
-                //{
-                //    Console.SetCursorPosition(STARTING_POINT + BLOCKS + 8, Console.CursorTop);
-                //}
-                //sb.Append(" " + animation[animState]);
-                //animState++;
-                //animState %= animation.Length;
+                sb.Append(" " + animation[animState]);
+                animState++;
+                animState %= animation.Length;
+                Console.Write(sb);
             }
-        }
-
-        public void Report(double value)
-        {
-            throw new NotImplementedException();
         }
 
         public void Dispose()
