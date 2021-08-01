@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadingBar", "LoadingBar.csproj", "{284210D4-49D5-40C4-A2A7-6560184C5907}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{284210D4-49D5-40C4-A2A7-6560184C5907}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{284210D4-49D5-40C4-A2A7-6560184C5907}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{284210D4-49D5-40C4-A2A7-6560184C5907}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{284210D4-49D5-40C4-A2A7-6560184C5907}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E97ABA5F-CA18-4C44-A277-2C5C5137D080}
+	EndGlobalSection
+EndGlobal
